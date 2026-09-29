@@ -1,14 +1,50 @@
 import math
 
 # Task (2/12): Define a class Vec
+class Vec:
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+
+    def __repr__(self):
+        return f"({self.x}, {self.y})"
+
+    # Multiplikation med skalär måste ske som skalär * vektor
+    def __rmul__(self, factor):
+        return Vec(self.x*factor, self.y*factor)
+
+    def __add__(self, other):
+        return Vec(self.x+other.x, self.y+other.y)
+
+    def __sub__(self, other):
+        return Vec(self.x-other.x, self.y-other.y)
+
+    def norm(self):
+        return math.sqrt(self.x**2 + self.y**2)
+
+    def get_coords(self):
+        return (self.x, self.y)
 
 # Task (3/12): Additionally define a function dot(u, v)
+def dot(u, v):
+    return u.x*v.x + u.y*v.y
 
 # Task (4/12): Create a class Particle
+class Particle:
+    def __init__(self, m, x, v, r):
+        self.mass = m
+        self.position = x
+        self.velocity = v
+        self.radius = r
 
 # Task (5/12): In the Particle class, implement a method inertial_move(self, dt).
+    def inertial_move(self, dt):
+        self.position = dt*self.velocity + self.position
 
 # Task (6/12): In the Particle class, implement a method apply_force(self, dt, f)
+    def apply_force(self, dt, f):
+        a = 1/self.mass*f
+        self.velocity = dt*a + self.velocity
 
 ##########################################
 ### NB. Tasks 7–8 are done in view.py. ###
