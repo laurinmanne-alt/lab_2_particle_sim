@@ -46,16 +46,16 @@ class Particle:
         a = 1/self.mass*f
         self.velocity = dt*a + self.velocity
 
+# Task (9/12): In the Particle class, add a method bounding_box(self)
+    def bounding_box(self):
+        top_left = (self.position[0]-self.radius, self.position[1]+self.radius)
+        bottom_right = (self.position[0]+self.radius, self.position[1]-self.radius)
+
+        return top_left, bottom_right
+
 ##########################################
 ### NB. Tasks 7–8 are done in view.py. ###
 ##########################################
-
-
-# Task (9/12): In the Particle class, add a method bounding_box(self)
-
-
-
-
 
 
 ###########################################
