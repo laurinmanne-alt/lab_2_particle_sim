@@ -44,6 +44,6 @@ def simulation_loop(f, timestep, particles):
         
         for p, o in zip(particles, ovals):
             p.inertial_move(timestep)
-            move_oval_to(canvas, o, p.bounding_box[0], p.bounding_box[1])
+            move_oval_to(canvas, o, p.bounding_box()[0], p.bounding_box()[1])
 
         canvas.update()
