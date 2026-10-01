@@ -1,6 +1,8 @@
 # Task (7/12): Draw on canvas
 from tkinter import *
 from model import *
+from time import time
+
 root = Tk()
 canvas = Canvas(root, bg="white", width=800, height=600)
 canvas.pack()   
@@ -39,6 +41,7 @@ def simulation_loop(f, timestep, particles):
     for p in particles:
         ovals.append(create_oval(canvas, p))
 
+    time_at_last_frame = 0
     while True:
         f(timestep, particles)
         
@@ -46,4 +49,6 @@ def simulation_loop(f, timestep, particles):
             p.inertial_move(timestep)
             move_oval_to(canvas, o, p.bounding_box()[0], p.bounding_box()[1])
 
-        canvas.update()
+        if time() - time_at_last_frame >= 1/30:
+            canvas.update()
+            time_at_last_frame = time()
