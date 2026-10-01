@@ -21,8 +21,21 @@ def to_canvas_coords(canvas, u):
 ### NB. Task 9 is done in model.py. ###
 #######################################
 
-# Task (10/12): Define a new function move_oval_to(o, u1, u2)
+# Task (10/12): Define a new function move_oval_to(canvas, o, u1, u2)
 
 # Task (11/12): Define a new function create_oval(canvas, particle)
 
 # Task (12/12): Define a function simulation_loop(f, timestep, particles)
+def simulation_loop(f, timestep, particles):
+    ovals = []
+    for p in particles:
+        ovals.append(create_oval(canvas, p))
+
+    while True:
+        f(timestep, particles)
+        
+        for p, o in zip(particles, ovals):
+            i.inertial_move(timestep)
+            move_oval_to(canvas, o, i.bounding_box[0], i.bounding_box[1])
+
+        canvas.update()
