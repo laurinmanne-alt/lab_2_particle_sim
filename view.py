@@ -24,5 +24,11 @@ def to_canvas_coords(canvas, u):
 # Task (10/12): Define a new function move_oval_to(o, u1, u2)
 
 # Task (11/12): Define a new function create_oval(canvas, particle)
+def create_oval(canvas, particle):
+    o = canvas.create_oval(80, 30, 140, 150, fill="blue")
+    pos = particle.position
+    r = particle.radius
+    move_oval_to(canvas, o, pos - r, pos + r)
+    return o
 
 # Task (12/12): Define a function simulation_loop(f, timestep, particles)
