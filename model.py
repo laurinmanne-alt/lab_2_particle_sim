@@ -62,3 +62,8 @@ class Particle:
 ### When you're done with all 12 tasks: ###
 ### forces/other features in this file! ###
 ###########################################
+
+def constant_gravitational_field(dt, particles, g=10):
+    for p in particles:
+        f = g*p.mass*Vec(0,-1)
+        p.apply_force(dt, f)
