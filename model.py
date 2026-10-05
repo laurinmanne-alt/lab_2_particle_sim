@@ -67,3 +67,20 @@ def constant_gravitational_field(dt, particles, g=10):
     for p in particles:
         f = g*p.mass*Vec(0,-1)
         p.apply_force(dt, f)
+
+def gravitational_force(dt, particles, G=10000):
+    for p in particles:
+        total = Vec(0, 0)
+
+        for other in particles:
+            if other is not p: 
+                diff = other.position - p.position
+                r = diff.norm()
+                if r <= p.radius - other.radius + 0.1:
+                    return
+
+                F = G * p.mass * other.mass / r**2
+                f2 = F*(1/r * diff)
+                total += f2
+
+        p.apply_force(dt, total)
