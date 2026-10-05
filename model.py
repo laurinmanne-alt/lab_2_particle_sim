@@ -94,3 +94,14 @@ def gravitational_force(dt, particles, G=500):
                 total += f2
 
         p.apply_force(dt, total)
+def collision(dt, particles, k):
+    for p2 in particles:
+        total_force = Vec(0, 0)
+        for p1 in particles:
+            if p1 is not p2:
+                r = (p2.position-p1.position).norm()
+                if r < (p2.radius + p1.radius):
+                    force_magnitude = k*(p2.radius + p1.radius - r)
+                    total_force = total_force + force_magnitude*(p2.position-p1.position)
+                    # print(total_force)
+        p2.apply_force(dt, total_force)
