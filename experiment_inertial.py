@@ -1,17 +1,23 @@
 from view import *
 import math
+import random
 
-n = 20
+random.seed()
+
+n = 0
 particles = []
 for i in range(n):
-    theta = i*2*math.pi/n
-    u = Vec(math.cos(theta),math.sin(theta))
-    pos = 10 * u
-    vel = -1 * u 
-    particles.append(Particle(1,pos,vel,0.2))
+    pos = Vec(random.uniform(-8, 8), random.uniform(-8, 8))
+    vel = Vec(random.uniform(-10, 10), random.uniform(-10, 10))
+    mass = random.uniform(0.5, 3)
+    particles.append(Particle(mass, pos, vel, 0.2*mass**0.5))
+
 
 def no_force(dt,particles):
     pass
 
-simulation_loop(gravitational_force, 0.000005, particles,)
+def forces(dt, particles):
+    gravitational_force(dt, particles)
+    circular_arena(dt, particles)
 
+simulation_loop(forces, 0.000005, particles,)

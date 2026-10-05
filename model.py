@@ -70,14 +70,14 @@ def constant_gravitational_field(dt, particles, g=10):
         f = g*p.mass*Vec(0,-1)
         p.apply_force(dt, f)
 
-def circular_arena(dt, particles, k, R):
+def circular_arena(dt, particles, k=100000, R=9):
     for p in particles:
         r = p.position.norm()
         if R < r:
             f = k * (R - r) * (p.position * (1/r))
             p.apply_force(dt, f)
 
-def gravitational_force(dt, particles, G=10000, eps=0.5):
+def gravitational_force(dt, particles, G=200, eps=0.5):
     for p in particles:
         total = Vec(0, 0)
 
