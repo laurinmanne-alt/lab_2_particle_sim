@@ -9,7 +9,9 @@ class Vec:
     def __repr__(self):
         return f"({self.x}, {self.y})"
 
-    # Multiplikation med skalär måste ske som skalär * vektor
+    def __mul__(self, factor):
+        return Vec(factor*self.x, factor*self.y)
+
     def __rmul__(self, factor):
         return Vec(self.x*factor, self.y*factor)
 
@@ -67,3 +69,11 @@ def constant_gravitational_field(dt, particles, g=10):
     for p in particles:
         f = g*p.mass*Vec(0,-1)
         p.apply_force(dt, f)
+
+
+def circular_arena(dt, particles, k, R):
+    for p in particles:
+        r = p.position.norm()
+        if R < r:
+            f = k * (R - r) * (p.position * (1/r))
+            p.apply_force(dt, f)
