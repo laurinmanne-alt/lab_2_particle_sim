@@ -13,5 +13,5 @@ for i in range(n):
 def no_force(dt,particles):
     pass
 
-simulation_loop(no_force, 0.000005, particles)
+simulation_loop(gravitational_force, 0.000005, particles,)
 
