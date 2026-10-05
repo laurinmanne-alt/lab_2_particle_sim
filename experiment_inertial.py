@@ -4,7 +4,7 @@ import random
 
 random.seed()
 
-n = 0
+n = 10
 particles = []
 for i in range(n):
     pos = Vec(random.uniform(-8, 8), random.uniform(-8, 8))

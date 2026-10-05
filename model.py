@@ -77,7 +77,7 @@ def circular_arena(dt, particles, k=100000, R=9):
             f = k * (R - r) * (p.position * (1/r))
             p.apply_force(dt, f)
 
-def gravitational_force(dt, particles, G=200, eps=0.5):
+def gravitational_force(dt, particles, G=500):
     for p in particles:
         total = Vec(0, 0)
 
@@ -89,7 +89,7 @@ def gravitational_force(dt, particles, G=200, eps=0.5):
                 if r <= p.radius + other.radius:
                     continue
 
-                F = G * p.mass * other.mass / (r**2 + eps**2)
+                F = G * p.mass * other.mass / r**2
                 f2 = (F / r) * diff
                 total += f2
 
