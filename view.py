@@ -8,7 +8,11 @@ canvas = Canvas(root, bg="white", width=800, height=600)
 canvas.pack()   
 
 # Task (8/12): Define a new function to_canvas_coords(canvas, x)
+# Function: Omvandlar positioner till ett talsystem på canvasen
+# Input: Ett canvas objekt och en x/y koordinat som en tupel
+# Output: Returnerar tillbaka värderna fast omformatterade för koordinatsystem
 def to_canvas_coords(canvas, u):
+    print(type(u))
     h = canvas.winfo_reqheight()
     w = canvas.winfo_reqwidth()
     scale = h / 20
@@ -22,6 +26,9 @@ def to_canvas_coords(canvas, u):
 ### NB. Task 9 is done in model.py. ###
 #######################################
 
+# Function: Flyttar en oval till specifika koordinater
+# Input: Ett canvas objekt, oval objektet som ska flyttas, u1 och u2 skapar omkretsen för kvadratområdet där cirkeln hmanr
+# Output: null
 # Task (10/12): Define a new function move_oval_to(canvas, o, u1, u2)
 def move_oval_to(canvas, o, u1, u2):
     x = to_canvas_coords(canvas, u1)
@@ -30,8 +37,11 @@ def move_oval_to(canvas, o, u1, u2):
     canvas.coords(o, x[0], x[1], y[0], y[1])
 
 # Task (11/12): Define a new function create_oval(canvas, particle)
+# Function: Skapar en oval och flyttar den till den tilldelade particlen
+# Input: Ett canvas objekt och ett partikel objekt
+# Output: Returnerar cirkel objektet
 def create_oval(canvas, particle):
-    o = canvas.create_oval(80, 30, 140, 150, fill="blue")
+    o = canvas.create_oval(80, 30, 140, 150, fill="cyan")
     move_oval_to(canvas, o, particle.bounding_box()[0], particle.bounding_box()[1])
     return o
 

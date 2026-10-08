@@ -70,20 +70,24 @@ def constant_gravitational_field(dt, particles, g=10):
         f = g*p.mass*Vec(0,-1)
         p.apply_force(dt, f)
 
-def circular_arena(dt, particles, k=100000, R=9):
+def circular_arena(dt, particles, k=10000, R=9):
     for p in particles:
         r = p.position.norm()
         if R < r:
             f = k * (R - r) * (p.position * (1/r))
             p.apply_force(dt, f)
 
-def gravitational_force(dt, particles, G=500):
+# Function: Räknar ut och applicerar gravitationskraft emellan alla partiklar
+# Input: dt är en tidsvariabel (som en float), particles är en array med alla partikelobjekt och G konstanten är gravitationens styrka
+# Output: null
+def gravitational_force(dt, particles, G=15):
+    # Loopar igenom partikeln som kraften ska appliceras på
     for p in particles:
         total = Vec(0, 0)
 
-
+        # Beräknar alla andra partiklars påverkan på p och applicerar den totala kraften som en vektor
         for other in particles:
-            if other is not p: 
+            if other is not p:
                 diff = other.position - p.position
                 r = diff.norm()
                 if r <= p.radius + other.radius:
@@ -94,7 +98,8 @@ def gravitational_force(dt, particles, G=500):
                 total += f2
 
         p.apply_force(dt, total)
-def collision(dt, particles, k):
+
+def collision(dt, particles, k=1000000):
     for p2 in particles:
         total_force = Vec(0, 0)
         for p1 in particles:
