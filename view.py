@@ -46,6 +46,8 @@ def create_oval(canvas, particle):
     return o
 
 # Task (12/12): Define a function simulation_loop(f, timestep, particles)
+# Function: Programmets huvudloop som går medan simulationen är igång. Loopen kallar på funktioner som skapar de grafiska objekten för partiklarna och kallar på kraft funktionerna som påverkar partiklarnas beteende. 
+# Output: null
 def simulation_loop(f, timestep, particles):
     ovals = []
     for p in particles:

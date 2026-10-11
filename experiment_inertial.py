@@ -12,10 +12,6 @@ for i in range(n):
     mass = random.uniform(0.5, 3)
     particles.append(Particle(mass, pos, vel, 0.2*mass**0.5))
 
-
-def no_force(dt,particles):
-    pass
-
 def forces(dt, particles):
     gravitational_force(dt, particles)
 

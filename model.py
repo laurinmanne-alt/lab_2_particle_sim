@@ -65,11 +65,17 @@ class Particle:
 ### forces/other features in this file! ###
 ###########################################
 
+# Function: Skapar en konstant som drar partiklarna mot mitten av arenan. 
+# Input: dt är en tidsvariabel (som en float), particles är en array med alla partikelobjekt, g är gravitationsaccelerationen (~10 på jorden).
+# Output: null
 def constant_gravitational_field(dt, particles, g=10):
     for p in particles:
         f = g*p.mass*Vec(0,-1)
         p.apply_force(dt, f)
 
+# Function: Skapar en rund arena/ett runt område för particlarna. Om particlarna rör sig utanför arenan trycks de in igen med en kraft f.
+# Input: dt är en tidsvariabel (som en float), particles är en array med alla partikelobjekt, k är en koefficeient som som bestämmer hur hård väggen är, R är arenans radie. 
+# Output: null
 def circular_arena(dt, particles, k=10000, R=9):
     for p in particles:
         r = p.position.norm()
