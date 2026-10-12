@@ -16,10 +16,10 @@ def to_canvas_coords(canvas, u):
     w = canvas.winfo_reqwidth()
     scale = h / 20
 
-    x = scale * u[0]
-    y = scale * -u[1]
+    x = scale * u.get_coords()[0]
+    y = scale * -u.get_coords()[1]
 
-    return (x + w / 2, y + h / 2)
+    return Vec(x + w / 2, y + h / 2)
 
 #######################################
 ### NB. Task 9 is done in model.py. ###
@@ -33,7 +33,7 @@ def move_oval_to(canvas, o, u1, u2):
     x = to_canvas_coords(canvas, u1)
     y = to_canvas_coords(canvas, u2)
 
-    canvas.coords(o, x[0], x[1], y[0], y[1])
+    canvas.coords(o, x.x, x.y, y.x, y.y)
 
 # Task (11/12): Define a new function create_oval(canvas, particle)
 # Function: Skapar en oval och flyttar den till den tilldelade particlen

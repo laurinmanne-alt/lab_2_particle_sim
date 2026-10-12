@@ -46,8 +46,8 @@ class Particle:
 
 # Task (9/12): In the Particle class, add a method bounding_box(self)
     def bounding_box(self):
-        top_left = (self.position.get_coords()[0]-self.radius, self.position.get_coords()[1]+self.radius)
-        bottom_right = (self.position.get_coords()[0]+self.radius, self.position.get_coords()[1]-self.radius)
+        top_left = Vec(self.position.get_coords()[0]-self.radius, self.position.get_coords()[1]+self.radius)
+        bottom_right = Vec(self.position.get_coords()[0]+self.radius, self.position.get_coords()[1]-self.radius)
 
         return top_left, bottom_right
 
@@ -119,5 +119,6 @@ def collision(dt, particles, k=1000000):
                 r = (p2.position-p1.position).norm()
                 if r < (p2.radius + p1.radius):
                     force_magnitude = k*(p2.radius + p1.radius - r)
-                    total_force = total_force + force_magnitude*(p2.position-p1.position)
+                    force_direction = p2.position-p1.position
+                    total_force = total_force + force_magnitude*(1/(force_direction.norm()))*force_direction
         p2.apply_force(dt, total_force)
