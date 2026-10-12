@@ -12,7 +12,6 @@ canvas.pack()
 # Input: Ett canvas objekt och en x/y koordinat som en tupel
 # Output: Returnerar tillbaka värderna fast omformatterade för koordinatsystem
 def to_canvas_coords(canvas, u):
-    print(type(u))
     h = canvas.winfo_reqheight()
     w = canvas.winfo_reqwidth()
     scale = h / 20

@@ -16,6 +16,6 @@ for i in range(n):
 def forces(dt, particles):
     collision(dt, particles)
     gravitational_force(dt, particles)
-    circular_arena(dt, particles)
+    circular_arena(dt, particles, canvas, to_canvas_coords)
 
 simulation_loop(forces, 0.00005, particles,)

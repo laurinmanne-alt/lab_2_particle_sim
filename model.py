@@ -27,10 +27,6 @@ class Vec:
     def get_coords(self):
         return (self.x, self.y)
 
-# Task (3/12): Additionally define a function dot(u, v)
-def dot(u, v):
-    return u.x*v.x + u.y*v.y
-
 # Task (4/12): Create a class Particle
 class Particle:
     def __init__(self, m, x, v, r):
@@ -55,15 +51,10 @@ class Particle:
 
         return top_left, bottom_right
 
-##########################################
-### NB. Tasks 7–8 are done in view.py. ###
-##########################################
 
-
-###########################################
-### When you're done with all 12 tasks: ###
-### forces/other features in this file! ###
-###########################################
+# Task (3/12): Additionally define a function dot(u, v)
+def dot(u, v):
+    return u.x*v.x + u.y*v.y
 
 # Function: Skapar en konstant som drar partiklarna mot mitten av arenan. 
 # Input: dt är en tidsvariabel (som en float), particles är en array med alla partikelobjekt, g är gravitationsaccelerationen (~10 på jorden).
@@ -76,12 +67,25 @@ def constant_gravitational_field(dt, particles, g=10):
 # Function: Skapar en rund arena/ett runt område för particlarna. Om particlarna rör sig utanför arenan trycks de in igen med en kraft f.
 # Input: dt är en tidsvariabel (som en float), particles är en array med alla partikelobjekt, k är en koefficeient som som bestämmer hur hård väggen är, R är arenans radie. 
 # Output: null
-def circular_arena(dt, particles, k=10000, R=9):
+def circular_arena(dt, particles, canvas, to_canvas_coords, k=10000, R=9):
+    try:
+        arena_wall
+    except NameError:
+        create_graphic_wall(canvas, to_canvas_coords, R)
+
     for p in particles:
         r = p.position.norm()
         if R < r:
             f = k * (R - r) * (p.position * (1/r))
             p.apply_force(dt, f)
+
+
+def create_graphic_wall(canvas, to_canvas_coords, R):
+    x0, y0 = to_canvas_coords(canvas, (-R, R))
+    x1, y1 = to_canvas_coords(canvas, (R, -R))
+
+    global arena_wall
+    arena_wall = canvas.create_oval(x0, y0, x1, y1, outline="black")
 
 # Function: Räknar ut och applicerar gravitationskraft emellan alla partiklar
 # Input: dt är en tidsvariabel (som en float), particles är en array med alla partikelobjekt och G konstanten är gravitationens styrka
