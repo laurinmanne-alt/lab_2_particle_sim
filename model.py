@@ -88,6 +88,17 @@ def create_graphic_wall(canvas, to_canvas_coords, R):
 
     global arena_wall
     arena_wall = canvas.create_oval(x0, y0, x1, y1, outline="black")
+# Function: Skapar en vägg, definierad som en punkt och normalvektor, som partiklar ska studsa mot.
+# Input: dt, particles, 
+#       k: En koefficient som anger hur stark den tryckande kraften ska vara
+#       n: Normalvektorn till väggen, ska peka "inåt" för att ange vad som är in- och utsida
+#       a: En punkt på linjen (en vektor)
+def wall_force(dt, particles, k, n, a):
+    for p in particles:
+        d = dot((p.position-a), n)
+        f = -d*k*n
+        if d < 0:
+            p.apply_force(dt, f)
 
 # Function: Räknar ut och applicerar gravitationskraft emellan alla partiklar
 # Input: dt är en tidsvariabel (som en float), particles är en array med alla partikelobjekt och G konstanten är gravitationens styrka
@@ -111,6 +122,8 @@ def gravitational_force(dt, particles, G=15):
 
         p.apply_force(dt, total)
 
+# Function: Får partiklar att krocka med varandra och studsa
+# Input:    k: studskoefficienten
 def collision(dt, particles, k=1000000):
     for p2 in particles:
         total_force = Vec(0, 0)

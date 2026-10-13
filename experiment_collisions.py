@@ -1,3 +1,5 @@
+#Ett enkelt test för kollisioner. Startar med två partiklar
+#i rktning mot varandra för att se till att de krockar.
 from view import *
 import math
 
