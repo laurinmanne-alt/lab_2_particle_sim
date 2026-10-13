@@ -50,11 +50,12 @@ class Particle:
         bottom_right = Vec(self.position.get_coords()[0]+self.radius, self.position.get_coords()[1]-self.radius)
 
         return top_left, bottom_right
-
+    
 
 # Task (3/12): Additionally define a function dot(u, v)
 def dot(u, v):
     return u.x*v.x + u.y*v.y
+
 
 # Function: Skapar en konstant som drar partiklarna mot mitten av arenan. 
 # Input: dt är en tidsvariabel (som en float), particles är en array med alla partikelobjekt, g är gravitationsaccelerationen (~10 på jorden).
@@ -64,30 +65,18 @@ def constant_gravitational_field(dt, particles, g=10):
         f = g*p.mass*Vec(0,-1)
         p.apply_force(dt, f)
 
+
 # Function: Skapar en rund arena/ett runt område för particlarna. Om particlarna rör sig utanför arenan trycks de in igen med en kraft f.
 # Input: dt är en tidsvariabel (som en float), particles är en array med alla partikelobjekt, k är en koefficeient som som bestämmer hur hård väggen är, R är arenans radie. 
 # Output: null
-def circular_arena(dt, particles, canvas, to_canvas_coords, k=10000, R=9):
-    try:
-        arena_wall
-    except NameError:
-        create_graphic_wall(canvas, to_canvas_coords, R)
-
+def circular_arena(dt, particles, k=10000, R=9):
     for p in particles:
         r = p.position.norm()
         if R < r:
             f = k * (R - r) * (p.position * (1/r))
             p.apply_force(dt, f)
 
-# Function: Ritar en rund circel i mitten av fönstret med samma radie som den runda arenan.
-# Input: canvas är objektet med rutan/fönstret, to_canvas_coords är en function som omvandlar vanliga koordonater till canvas koordinater, R är radien på cirkeln.
-# Output: null
-def create_graphic_wall(canvas, to_canvas_coords, R):
-    x0, y0 = to_canvas_coords(canvas, (-R, R))
-    x1, y1 = to_canvas_coords(canvas, (R, -R))
 
-    global arena_wall
-    arena_wall = canvas.create_oval(x0, y0, x1, y1, outline="black")
 # Function: Skapar en vägg, definierad som en punkt och normalvektor, som partiklar ska studsa mot.
 # Input: dt, particles, 
 #       k: En koefficient som anger hur stark den tryckande kraften ska vara
@@ -99,6 +88,7 @@ def wall_force(dt, particles, k, n, a):
         f = -d*k*n
         if d < 0:
             p.apply_force(dt, f)
+
 
 # Function: Räknar ut och applicerar gravitationskraft emellan alla partiklar
 # Input: dt är en tidsvariabel (som en float), particles är en array med alla partikelobjekt och G konstanten är gravitationens styrka
@@ -121,6 +111,7 @@ def gravitational_force(dt, particles, G=15):
                 total += f2
 
         p.apply_force(dt, total)
+
 
 # Function: Får partiklar att krocka med varandra och studsa
 # Input:    k: studskoefficienten

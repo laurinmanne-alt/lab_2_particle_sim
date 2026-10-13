@@ -15,10 +15,9 @@ for i in range(n):
     mass = random.uniform(0.5, 3)
     particles.append(Particle(mass, pos, vel, 0.2*mass**0.5))
 
-
 def forces(dt, particles):
     collision(dt, particles)
     gravitational_force(dt, particles)
-    circular_arena(dt, particles, canvas, to_canvas_coords)
+    circular_arena(dt, particles)
 
 simulation_loop(forces, 0.00005, particles)

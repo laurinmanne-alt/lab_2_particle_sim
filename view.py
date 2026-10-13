@@ -5,7 +5,7 @@ from time import time
 
 root = Tk()
 canvas = Canvas(root, bg="white", width=800, height=600)
-canvas.pack()   
+canvas.pack()
 
 # Task (8/12): Define a new function to_canvas_coords(canvas, x)
 # Function: Omvandlar positioner till ett talsystem på canvasen
@@ -21,9 +21,6 @@ def to_canvas_coords(canvas, u):
 
     return Vec(x + w / 2, y + h / 2)
 
-#######################################
-### NB. Task 9 is done in model.py. ###
-#######################################
 
 # Function: Flyttar en oval till specifika koordinater
 # Input: Ett canvas objekt, oval objektet som ska flyttas, u1 och u2 skapar omkretsen för kvadratområdet där cirkeln hmanr
@@ -35,6 +32,7 @@ def move_oval_to(canvas, o, u1, u2):
 
     canvas.coords(o, x.x, x.y, y.x, y.y)
 
+
 # Task (11/12): Define a new function create_oval(canvas, particle)
 # Function: Skapar en oval och flyttar den till den tilldelade particlen
 # Input: Ett canvas objekt och ett partikel objekt
@@ -44,6 +42,17 @@ def create_oval(canvas, particle):
     move_oval_to(canvas, o, particle.bounding_box()[0], particle.bounding_box()[1])
     return o
 
+
+# Function: Ritar en rund circel i mitten av fönstret med samma radie som den runda arenan.
+# Input: canvas är objektet med rutan/fönstret, to_canvas_coords är en function som omvandlar vanliga koordonater till canvas koordinater, R är radien på cirkeln.
+# Output: null
+def create_graphic_wall(R):
+    x0, y0 = to_canvas_coords(canvas, Vec(-R, R)).get_coords()
+    x1, y1 = to_canvas_coords(canvas, Vec(R, -R)).get_coords()
+    
+    canvas.create_oval(x0, y0, x1, y1, outline="black")
+
+
 # Task (12/12): Define a function simulation_loop(f, timestep, particles)
 # Function: Programmets huvudloop som går medan simulationen är igång. Loopen kallar på funktioner som skapar de grafiska objekten för partiklarna och kallar på kraft funktionerna som påverkar partiklarnas beteende. 
 # Output: null
@@ -51,6 +60,8 @@ def simulation_loop(f, timestep, particles):
     ovals = []
     for p in particles:
         ovals.append(create_oval(canvas, p))
+
+    create_graphic_wall(9)  # Kommentera ut för att ta bort den runda cirkeln i UI och ändra parametern så den matchat med circular_arena radien. Kom verkligen inte på någon bättre lösning :*(
 
     time_at_last_frame = 0
     while True:
