@@ -79,7 +79,9 @@ def circular_arena(dt, particles, canvas, to_canvas_coords, k=10000, R=9):
             f = k * (R - r) * (p.position * (1/r))
             p.apply_force(dt, f)
 
-
+# Function: Ritar en rund circel i mitten av fönstret med samma radie som den runda arenan.
+# Input: canvas är objektet med rutan/fönstret, to_canvas_coords är en function som omvandlar vanliga koordonater till canvas koordinater, R är radien på cirkeln.
+# Output: null
 def create_graphic_wall(canvas, to_canvas_coords, R):
     x0, y0 = to_canvas_coords(canvas, (-R, R))
     x1, y1 = to_canvas_coords(canvas, (R, -R))
@@ -118,5 +120,4 @@ def collision(dt, particles, k=1000000):
                 if r < (p2.radius + p1.radius):
                     force_magnitude = k*(p2.radius + p1.radius - r)
                     total_force = total_force + force_magnitude*(p2.position-p1.position)
-                    # print(total_force)
         p2.apply_force(dt, total_force)

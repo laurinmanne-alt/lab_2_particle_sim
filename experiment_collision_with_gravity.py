@@ -1,3 +1,6 @@
+# Detta experiment visar funktionerna collision(), gravitational_force() och circular_arena(). Partiklarna borde dras mot varandra tack vare gravitational_force(), studsa på varandra med collision() och ha en cirkulär arena/bana där partiklarna studsar på väggen. 
+# Experimentet funkar som väntat. Partiklarna rör sig genom väggen något innan de vänder och studsar tillbaka, men det är väntat då circular_arena() skapar en kraft på partiklarna och det därför tar lite tid för dem att bromsa in och sedan accelerera åt andra hållet. 
+
 from view import *
 import math
 import random
@@ -18,4 +21,4 @@ def forces(dt, particles):
     gravitational_force(dt, particles)
     circular_arena(dt, particles, canvas, to_canvas_coords)
 
-simulation_loop(forces, 0.00005, particles,)
+simulation_loop(forces, 0.00005, particles)
