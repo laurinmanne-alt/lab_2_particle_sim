@@ -1,3 +1,6 @@
+# Detta experiment testar bara gravitational_force(). Partiklarna kommer att starta på random ställen med random storlek, hastighet och massa. De kommer sedan påverkas av varandras gravitation och antagligen glida utanför skärmen. 
+# När time-step ökas/minskas ökas eller minskas hastighten på simulationen. Eftersom mer tid hinner passera per iteration av main loopen och hastigheten av main loopen inte påverkas, kommer högre time-step reslutera i en snabbare simulaering och vice versa. 
+
 from view import *
 import math
 import random
@@ -15,4 +18,4 @@ for i in range(n):
 def forces(dt, particles):
     gravitational_force(dt, particles)
 
-simulation_loop(forces, 0.0001, particles,)
+simulation_loop(forces, 0.0001, particles)

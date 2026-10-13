@@ -53,6 +53,13 @@ def create_graphic_wall(R):
     canvas.create_oval(x0, y0, x1, y1, outline="black")
 
 
+# Function: Checkar om funktionen target_name nämns i funktionen func. I detta fall kollar alltså funktionen om target_name kallas på i func. Om detta är fallet returneras True. 
+# Input: func är funktionen där du kollar om target_name nämns, target_name är funktionen du söker efter i func.
+# Output: True om target_name nämns i func, annars False. 
+def calls_function(func, target_name):
+    return target_name in func.__code__.co_names
+
+
 # Task (12/12): Define a function simulation_loop(f, timestep, particles)
 # Function: Programmets huvudloop som går medan simulationen är igång. Loopen kallar på funktioner som skapar de grafiska objekten för partiklarna och kallar på kraft funktionerna som påverkar partiklarnas beteende. 
 # Output: null
@@ -61,7 +68,8 @@ def simulation_loop(f, timestep, particles):
     for p in particles:
         ovals.append(create_oval(canvas, p))
 
-    create_graphic_wall(9)  # Kommentera ut för att ta bort den runda cirkeln i UI och ändra parametern så den matchat med circular_arena radien. Kom verkligen inte på någon bättre lösning :*(
+    if calls_function(f, "circular_arena"):
+        create_graphic_wall(9)  # Ändra parametern så den matchat med circular_arena radien. Kom verkligen inte på någon bättre lösning :*(
 
     time_at_last_frame = 0
     while True:
