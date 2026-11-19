@@ -96,8 +96,15 @@ def wall_force(dt, particles, k, n, a):
 
 
 def gravitational_force(dt, particles, G=15):
+    """Gravity between all particles, F = G*m1*m2/r^2. G is how strong gravity is.
+
+    Each pair is only calculated once. If p1 pulls p2 with f, then p2 pulls
+    p1 with -f (Newton's third law), so this does half the work.
+    """
+    # total force on each particle, same index as in particles
     forces = [Vec(0, 0) for p in particles]
-    
+
+    # j starts at i + 1 so every pair comes up exactly once
     for i in range(len(particles) - 1):
         for j in range(i + 1, len(particles)):
             p1 = particles[i]
@@ -111,8 +118,9 @@ def gravitational_force(dt, particles, G=15):
             F = G * p2.mass * p1.mass / r**2
             f2 = (F / r) * diff
             forces[i] += f2
-            forces[j] -= f2
+            forces[j] -= f2  # equal and opposite force
 
+    # apply the total force on each particle once
     for x in range(len(particles)):
         particles[x].apply_force(dt, forces[x])
 
