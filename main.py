@@ -1,9 +1,5 @@
-"""Run the particle simulation.
-
-Particles start at random positions with random velocities and masses.
-They attract each other with gravity, bounce off each other, and stay
-inside a circular arena.
-"""
+# Particles with gravity and collisions inside a circular arena.
+# Start positions, velocities and masses are random.
 
 from view import *
 import math
@@ -17,12 +13,10 @@ for i in range(n):
     pos = Vec(random.uniform(-7, 7), random.uniform(-7, 7))
     vel = Vec(random.uniform(-10, 10), random.uniform(-10, 10))
     mass = random.uniform(0.5, 3)
-    # Radius grows with mass, so heavier particles look bigger
-    particles.append(Particle(mass, pos, vel, 0.2*mass**0.5))
+    particles.append(Particle(mass, pos, vel, 0.2*mass**0.5))  # heavier = bigger
 
 
 def forces(dt, particles):
-    """Apply all forces for one time step."""
     collision(dt, particles)
     gravitational_force(dt, particles)
     circular_arena(dt, particles)
