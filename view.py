@@ -38,11 +38,6 @@ def create_oval(canvas, particle):
     return o
 
 
-def calls_function(func, target_name):
-    """True if func calls a function called target_name."""
-    return target_name in func.__code__.co_names
-
-
 def simulation_loop(f, timestep, particles):
     """Main loop. f applies the forces, then every particle is moved and redrawn."""
     ovals = []

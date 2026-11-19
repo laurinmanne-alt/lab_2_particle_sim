@@ -58,18 +58,6 @@ class Particle:
         return top_left, bottom_right
 
 
-def dot(u, v):
-    """Dot product of two vectors."""
-    return u.x*v.x + u.y*v.y
-
-
-def constant_gravitational_field(dt, particles, g=10):
-    """Pulls all particles straight down. g is the acceleration (about 10 on earth)."""
-    for p in particles:
-        f = g*p.mass*Vec(0,-1)
-        p.apply_force(dt, f)
-
-
 def circular_arena(dt, particles, k=10000, R=9):
     """Keeps the particles inside a circle with radius R.
 
@@ -79,19 +67,6 @@ def circular_arena(dt, particles, k=10000, R=9):
         r = p.position.norm()
         if R < r:
             f = k * (R - r) * (p.position * (1/r))
-            p.apply_force(dt, f)
-
-
-def wall_force(dt, particles, k, n, a):
-    """A straight wall that particles bounce off.
-
-    a is a point on the wall and n is the normal, pointing inwards.
-    k decides how hard the wall is.
-    """
-    for p in particles:
-        d = dot((p.position-a), n)
-        f = -d*k*n
-        if d < 0:
             p.apply_force(dt, f)
 
 

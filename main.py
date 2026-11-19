@@ -2,7 +2,6 @@
 # Start positions, velocities and masses are random.
 
 from view import *
-import math
 import random
 
 random.seed()
