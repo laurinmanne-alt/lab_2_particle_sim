@@ -1,7 +1,9 @@
 import math
 
-# Task (2/12): Define a class Vec
+
 class Vec:
+    """2D vector for positions, velocities and forces. Works with +, - and * (with a number)."""
+
     def __init__(self, x, y):
         self.x = x
         self.y = y
@@ -12,6 +14,7 @@ class Vec:
     def __mul__(self, factor):
         return Vec(factor*self.x, factor*self.y)
 
+    # so that 2 * v works, not just v * 2
     def __rmul__(self, factor):
         return Vec(self.x*factor, self.y*factor)
 
@@ -22,54 +25,44 @@ class Vec:
         return Vec(self.x-other.x, self.y-other.y)
 
     def norm(self):
+        """Length of the vector."""
         return math.sqrt(self.x**2 + self.y**2)
 
     def get_coords(self):
         return (self.x, self.y)
 
-# Task (4/12): Create a class Particle
-class Particle:
-    def __init__(self, m, x, v, r):
-        self.mass = m
-        self.position = x
-        self.velocity = v
-        self.radius = r
 
-# Task (5/12): In the Particle class, implement a method inertial_move(self, dt).
+class Particle:
+    """A round particle with mass, position, velocity and radius."""
+
+    def __init__(self, mass, position, velocity, radius):
+        self.mass = mass
+        self.position = position
+        self.velocity = velocity
+        self.radius = radius
+
     def inertial_move(self, dt):
+        """Move the particle one step with its current velocity."""
         self.position = dt*self.velocity + self.position
 
-# Task (6/12): In the Particle class, implement a method apply_force(self, dt, f)
     def apply_force(self, dt, f):
+        """Apply force f for time dt. Only changes the velocity."""
         a = 1/self.mass*f
         self.velocity = dt*a + self.velocity
 
-# Task (9/12): In the Particle class, add a method bounding_box(self)
     def bounding_box(self):
+        """Top-left and bottom-right corner of the box around the particle (used for drawing)."""
         top_left = Vec(self.position.get_coords()[0]-self.radius, self.position.get_coords()[1]+self.radius)
         bottom_right = Vec(self.position.get_coords()[0]+self.radius, self.position.get_coords()[1]-self.radius)
 
         return top_left, bottom_right
-    
-
-# Task (3/12): Additionally define a function dot(u, v)
-def dot(u, v):
-    return u.x*v.x + u.y*v.y
 
 
-# Function: Skapar en konstant som drar partiklarna mot mitten av arenan. 
-# Input: dt är en tidsvariabel (som en float), particles är en array med alla partikelobjekt, g är gravitationsaccelerationen (~10 på jorden).
-# Output: null
-def constant_gravitational_field(dt, particles, g=10):
-    for p in particles:
-        f = g*p.mass*Vec(0,-1)
-        p.apply_force(dt, f)
-
-
-# Function: Skapar en rund arena/ett runt område för particlarna. Om particlarna rör sig utanför arenan trycks de in igen med en kraft f.
-# Input: dt är en tidsvariabel (som en float), particles är en array med alla partikelobjekt, k är en koefficeient som som bestämmer hur hård väggen är, R är arenans radie. 
-# Output: null
 def circular_arena(dt, particles, k=10000, R=9):
+    """Keeps the particles inside a circle with radius R.
+
+    If a particle goes outside it gets pushed back in. k decides how hard the wall is.
+    """
     for p in particles:
         r = p.position.norm()
         if R < r:
@@ -77,45 +70,38 @@ def circular_arena(dt, particles, k=10000, R=9):
             p.apply_force(dt, f)
 
 
-# Function: Skapar en vägg, definierad som en punkt och normalvektor, som partiklar ska studsa mot.
-# Input: dt, particles, 
-#       k: En koefficient som anger hur stark den tryckande kraften ska vara
-#       n: Normalvektorn till väggen, ska peka "inåt" för att ange vad som är in- och utsida
-#       a: En punkt på linjen (en vektor)
-def wall_force(dt, particles, k, n, a):
-    for p in particles:
-        d = dot((p.position-a), n)
-        f = -d*k*n
-        if d < 0:
-            p.apply_force(dt, f)
-
-
-# Function: Räknar ut och applicerar gravitationskraft emellan alla partiklar
-# Input: dt är en tidsvariabel (som en float), particles är en array med alla partikelobjekt och G konstanten är gravitationens styrka
-# Output: null
 def gravitational_force(dt, particles, G=15):
-    # Loopar igenom partikeln som kraften ska appliceras på
-    for p in particles:
-        total = Vec(0, 0)
+    """Gravity between all particles, F = G*m1*m2/r^2. G is how strong gravity is.
 
-        # Beräknar alla andra partiklars påverkan på p och applicerar den totala kraften som en vektor
-        for other in particles:
-            if other is not p:
-                diff = other.position - p.position
-                r = diff.norm()
-                if r <= p.radius + other.radius:
-                    continue
+    Each pair is only calculated once. If p1 pulls p2 with f, then p2 pulls
+    p1 with -f (Newton's third law), so this does half the work.
+    """
+    # total force on each particle, same index as in particles
+    forces = [Vec(0, 0) for p in particles]
 
-                F = G * p.mass * other.mass / r**2
-                f2 = (F / r) * diff
-                total += f2
+    # j starts at i + 1 so every pair comes up exactly once
+    for i in range(len(particles) - 1):
+        for j in range(i + 1, len(particles)):
+            p1 = particles[i]
+            p2 = particles[j]
+            diff = p2.position - p1.position
+            r = diff.norm()
+            # skip if they overlap, otherwise r gets close to 0 and the force blows up
+            if r <= p2.radius + p1.radius:
+                continue
 
-        p.apply_force(dt, total)
+            F = G * p2.mass * p1.mass / r**2
+            f2 = (F / r) * diff
+            forces[i] += f2
+            forces[j] -= f2  # equal and opposite force
+
+    # apply the total force on each particle once
+    for x in range(len(particles)):
+        particles[x].apply_force(dt, forces[x])
 
 
-# Function: Får partiklar att krocka med varandra och studsa
-# Input:    k: studskoefficienten
 def collision(dt, particles, k=1000000):
+    """Pushes overlapping particles apart. The more they overlap, the harder the push."""
     for p2 in particles:
         total_force = Vec(0, 0)
         for p1 in particles:
