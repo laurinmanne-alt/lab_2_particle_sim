@@ -4,7 +4,7 @@
 from view import *
 import math
 import random
-    
+
 random.seed()
 
 n = 10  # number of particles
