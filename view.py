@@ -1,4 +1,5 @@
-# Task (7/12): Draw on canvas
+"""Drawing and main loop for the particle simulation (Tkinter)."""
+
 from tkinter import *
 from model import *
 from time import time
@@ -7,78 +8,89 @@ root = Tk()
 canvas = Canvas(root, bg="white", width=800, height=600)
 canvas.pack()
 
-# Task (8/12): Define a new function to_canvas_coords(canvas, x)
-# Function: Omvandlar positioner till ett talsystem på canvasen
-# Input: Ett canvas objekt och en x/y koordinat som en tupel
-# Output: Returnerar tillbaka värderna fast omformatterade för koordinatsystem
+
 def to_canvas_coords(canvas, u):
+    """Convert a simulation position to canvas pixel coordinates.
+
+    The simulation has (0, 0) in the middle and y pointing up. The canvas
+    has (0, 0) in the top-left corner and y pointing down, so y is flipped
+    and everything is shifted to the centre. The visible area is 20
+    simulation units tall.
+
+    Args:
+        canvas: the Tkinter Canvas to draw on
+        u: position in simulation coordinates (Vec)
+
+    Returns:
+        the same position in canvas pixels (Vec)
+    """
     h = canvas.winfo_reqheight()
     w = canvas.winfo_reqwidth()
     scale = h / 20
 
     x = scale * u.get_coords()[0]
+    # Minus sign flips y: up in the simulation is down on the canvas
     y = scale * -u.get_coords()[1]
 
     return Vec(x + w / 2, y + h / 2)
 
 
-# Function: Flyttar en oval till specifika koordinater
-# Input: Ett canvas objekt, oval objektet som ska flyttas, u1 och u2 skapar omkretsen för kvadratområdet där cirkeln hmanr
-# Output: null
-# Task (10/12): Define a new function move_oval_to(canvas, o, u1, u2)
 def move_oval_to(canvas, o, u1, u2):
+    """Move an oval so it fills the box between two corners.
+
+    Args:
+        canvas: the Tkinter Canvas
+        o: id of the oval to move
+        u1: top-left corner in simulation coordinates (Vec)
+        u2: bottom-right corner in simulation coordinates (Vec)
+    """
     x = to_canvas_coords(canvas, u1)
     y = to_canvas_coords(canvas, u2)
 
     canvas.coords(o, x.x, x.y, y.x, y.y)
 
 
-# Task (11/12): Define a new function create_oval(canvas, particle)
-# Function: Skapar en oval och flyttar den till den tilldelade particlen
-# Input: Ett canvas objekt och ett partikel objekt
-# Output: Returnerar cirkel objektet
 def create_oval(canvas, particle):
+    """Draw a circle for a particle and place it at the particle's position.
+
+    Returns:
+        the id of the new oval, used later to move it
+    """
+    # Start coordinates don't matter, move_oval_to places it right away
     o = canvas.create_oval(80, 30, 140, 150, fill="cyan")
     move_oval_to(canvas, o, particle.bounding_box()[0], particle.bounding_box()[1])
     return o
 
 
-# Function: Ritar en rund circel i mitten av fönstret med samma radie som den runda arenan.
-# Input: canvas är objektet med rutan/fönstret, to_canvas_coords är en function som omvandlar vanliga koordonater till canvas koordinater, R är radien på cirkeln.
-# Output: null
-def create_graphic_wall(R):
-    x0, y0 = to_canvas_coords(canvas, Vec(-R, R)).get_coords()
-    x1, y1 = to_canvas_coords(canvas, Vec(R, -R)).get_coords()
-    
-    canvas.create_oval(x0, y0, x1, y1, outline="black")
-
-
-# Function: Checkar om funktionen target_name nämns i funktionen func. I detta fall kollar alltså funktionen om target_name kallas på i func. Om detta är fallet returneras True. 
-# Input: func är funktionen där du kollar om target_name nämns, target_name är funktionen du söker efter i func.
-# Output: True om target_name nämns i func, annars False. 
 def calls_function(func, target_name):
+    """Return True if func calls a function named target_name."""
     return target_name in func.__code__.co_names
 
 
-# Task (12/12): Define a function simulation_loop(f, timestep, particles)
-# Function: Programmets huvudloop som går medan simulationen är igång. Loopen kallar på funktioner som skapar de grafiska objekten för partiklarna och kallar på kraft funktionerna som påverkar partiklarnas beteende. 
-# Output: null
 def simulation_loop(f, timestep, particles):
+    """Run the simulation forever and draw it.
+
+    Each step applies the forces, moves every particle and its circle,
+    and redraws the window at most 60 times per second.
+
+    Args:
+        f: function f(dt, particles) that applies all forces
+        timestep: simulated time per step (float)
+        particles: list of Particle objects
+    """
     ovals = []
     for p in particles:
         ovals.append(create_oval(canvas, p))
 
-    if calls_function(f, "circular_arena"):
-        create_graphic_wall(9)  # Ändra parametern så den matchat med circular_arena radien. Kom verkligen inte på någon bättre lösning :*(
-
     time_at_last_frame = 0
     while True:
         f(timestep, particles)
-        
+
         for p, o in zip(particles, ovals):
             p.inertial_move(timestep)
             move_oval_to(canvas, o, p.bounding_box()[0], p.bounding_box()[1])
 
-        if time() - time_at_last_frame >= 1/30:
+        # Physics runs every loop, but the screen only redraws at 60 FPS
+        if time() - time_at_last_frame >= 1/60:
             canvas.update()
             time_at_last_frame = time()
